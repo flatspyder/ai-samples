@@ -25,9 +25,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -91,7 +93,9 @@ fun GenAIWritingAssistanceScreen(viewModel: GenAIWritingAssistanceViewModel = hi
         }) { innerPadding ->
 
         Column(
-            modifier = Modifier.padding(innerPadding)
+            Modifier
+                .padding(12.dp)
+                .padding(innerPadding)
         ) {
             // Text input box
             TextField(
@@ -103,47 +107,43 @@ fun GenAIWritingAssistanceScreen(viewModel: GenAIWritingAssistanceViewModel = hi
                     .weight(.8f)
             )
 
-            Box(
-                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
-            ) {
-                Row {
-                    // Proofread button
-                    MainButton(
-                        buttonText = stringResource(id = R.string.genai_writing_assistance_proofread_btn),
-                        onClick = {
-                            showBottomSheet = true
-                            viewModel.proofread(textInput, context)
-                        })
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                // Proofread button
+                MainButton(
+                    buttonText = stringResource(id = R.string.genai_writing_assistance_proofread_btn),
+                    onClick = {
+                        showBottomSheet = true
+                        viewModel.proofread(textInput, context)
+                    })
 
-                    // Rewrite button
-                    MainButton(
-                        buttonText = stringResource(id = R.string.genai_writing_assistance_rewrite_btn),
-                        onClick = {
-                            showRewriteOptionsDialog = true
-                        })
-                }
+                // Rewrite button
+                MainButton(
+                    buttonText = stringResource(id = R.string.genai_writing_assistance_rewrite_btn),
+                    onClick = {
+                        showRewriteOptionsDialog = true
+                    })
             }
 
             // Extra options buttons
-            Box(
-                modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row {
-                    SecondaryButton(
-                        buttonText = stringResource(id = R.string.genai_writing_assistance_proofread_sample_text_btn),
-                        onClick = { textInput = proofreadSampleTextOptions.random() },
-                    )
+                SecondaryButton(
+                    buttonText = stringResource(id = R.string.genai_writing_assistance_proofread_sample_text_btn),
+                    onClick = { textInput = proofreadSampleTextOptions.random() },
+                )
 
-                    SecondaryButton(
-                        buttonText = stringResource(id = R.string.genai_writing_assistance_rewrite_sample_text_btn),
-                        onClick = { textInput = rewriteSampleTextOptions.random() }
-                    )
+                SecondaryButton(
+                    buttonText = stringResource(id = R.string.genai_writing_assistance_rewrite_sample_text_btn),
+                    onClick = { textInput = rewriteSampleTextOptions.random() }
+                )
 
-                    SecondaryButton(
-                        buttonText = stringResource(id = R.string.genai_writing_assistance_reset_btn),
-                        onClick = { textInput = "" }
-                    )
-                }
+                SecondaryButton(
+                    buttonText = stringResource(id = R.string.genai_writing_assistance_reset_btn),
+                    onClick = { textInput = "" }
+                )
             }
         }
 
@@ -157,7 +157,7 @@ fun GenAIWritingAssistanceScreen(viewModel: GenAIWritingAssistanceViewModel = hi
             ) {
                 Text(
                     text = resultGenerated.value,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(top = 8.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
                 )
             }
         }

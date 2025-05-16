@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,7 +76,9 @@ fun GenAISummarizationScreen(viewModel: GenAISummarizationViewModel = hiltViewMo
         }) { innerPadding ->
 
         Column(
-            modifier = Modifier.padding(innerPadding)
+            Modifier
+                .padding(12.dp)
+                .padding(innerPadding)
         ) {
             // Text input box
             TextField(
@@ -130,7 +134,7 @@ fun GenAISummarizationScreen(viewModel: GenAISummarizationViewModel = hiltViewMo
             ) {
                 Text(
                     text = summarizationResult.value,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(top = 8.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
                 )
             }
         }

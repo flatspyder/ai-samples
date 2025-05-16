@@ -23,8 +23,10 @@ import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,9 +38,11 @@ import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -61,6 +65,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.annotations.PreviewApi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,15 +99,11 @@ fun ImagenScreen (
     ) { innerPadding ->
         Column (
             Modifier
-                .padding(innerPadding)
+                .padding(12.dp)
                 .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
         ) {
-            Spacer(modifier = Modifier.padding(top = 16.dp))
             Card(
-                border = BorderStroke(
-                    2.dp,
-                    MaterialTheme.colorScheme.primary
-                ),
                 modifier = Modifier.size(
                         width = 400.dp,
                         height = 400.dp
@@ -125,20 +126,16 @@ fun ImagenScreen (
                     )
                 }
             }
-            Spacer(modifier = Modifier
-                .height(30.dp)
-                .padding(12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             TextField(
                 value = editTextValue,
                 onValueChange = { editTextValue = it },
-                label = { Text(stringResource(R.string.prompt_label)) }
+                label = { Text(stringResource(R.string.prompt_label)) },
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier
-                .height(30.dp)
-                .padding(12.dp))
-            androidx.compose.foundation.layout.Row {
+            Row {
                 Button (
-                    modifier = Modifier.padding(horizontal = 6.dp),
+                    modifier = Modifier.padding(vertical = 8.dp),
                     onClick = {
                         viewModel.generateImage(editTextValue)
                     },
@@ -155,10 +152,13 @@ fun ImagenScreen (
 @Composable
 fun SeeCodeButton(context: Context) {
     val githubLink = "https://github.com/android/ai-samples/tree/main/ai-catalog/samples/imagen"
-    Button(onClick = {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
-        context.startActivity(intent)
-    }) {
+    Button(
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
+            context.startActivity(intent)
+        },
+        modifier = Modifier.padding(end = 8.dp)
+    ) {
         Icon(Icons.Filled.Code, contentDescription = "See code")
         Text(
             modifier = Modifier.padding(start = 8.dp),

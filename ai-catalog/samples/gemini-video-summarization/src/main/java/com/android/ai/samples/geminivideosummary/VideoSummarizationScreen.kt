@@ -135,7 +135,7 @@ fun VideoSummarizationScreen(viewModel: VideoSummarizationViewModel = hiltViewMo
         }) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(18.dp)
+                .padding(12.dp)
                 .padding(innerPadding)
         ) {
             Spacer(modifier = Modifier.height(16.dp))

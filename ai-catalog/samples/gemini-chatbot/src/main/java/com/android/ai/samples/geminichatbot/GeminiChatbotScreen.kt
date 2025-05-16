@@ -191,10 +191,13 @@ fun MessageBubble(
 @Composable
 fun SeeCodeButton(context: Context) {
     val githubLink = "https://github.com/android/ai-samples/tree/main/ai-catalog/samples/gemini-chatbot"
-    Button(onClick = {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
-        context.startActivity(intent)
-    }) {
+    Button(
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
+            context.startActivity(intent)
+        },
+        modifier = Modifier.padding(end = 8.dp)
+    ) {
         Icon(Icons.Filled.Code, contentDescription = "See code")
         Text(
             modifier = Modifier.padding(start = 8.dp),

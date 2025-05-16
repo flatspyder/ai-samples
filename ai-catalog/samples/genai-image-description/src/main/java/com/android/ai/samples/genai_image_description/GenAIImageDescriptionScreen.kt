@@ -18,7 +18,6 @@
 package com.android.ai.samples.genai_image_description
 
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
@@ -148,7 +147,7 @@ fun GenAIImageDescriptionScreen(viewModel: GenAIImageDescriptionViewModel = hilt
             ) {
                 Text(
                     text = imageDescriptionResult.value,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(top = 8.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
                 )
             }
         }

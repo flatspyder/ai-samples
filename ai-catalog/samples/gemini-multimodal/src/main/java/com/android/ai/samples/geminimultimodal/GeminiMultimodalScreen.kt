@@ -17,17 +17,14 @@
 package com.android.ai.samples.geminimultimodal
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
+import androidx.activity.result.contract.ActivityResultContracts.TakePicturePreview
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +32,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -45,9 +41,11 @@ import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -76,7 +74,6 @@ fun GeminiMultimodalScreen(
     viewModel: GeminiMultimodalViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val textResponse by viewModel.textGenerated.collectAsState()
     val isGenerating by viewModel.isGenerating.observeAsState(false)
@@ -88,16 +85,12 @@ fun GeminiMultimodalScreen(
     }
 
     // Get the picture taken by the camera
-    val resultLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                if (result.data != null) {
-                    bitmap = result.data?.extras?.get("data") as Bitmap
-                    pictureAvailable = true
-                }
-            }
+    val cameraLauncher = rememberLauncherForActivityResult(TakePicturePreview()) { result ->
+        result?.let {
+            bitmap = it
+            pictureAvailable = true
         }
+    }
 
     Scaffold (
         topBar = {
@@ -121,7 +114,6 @@ fun GeminiMultimodalScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
-            Spacer(modifier = Modifier.height(12.dp))
             Card(
                 modifier = Modifier
                     .size(
@@ -134,27 +126,27 @@ fun GeminiMultimodalScreen(
                         bitmap = it.asImageBitmap(),
                         contentDescription = "Picture",
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
             Spacer(modifier = Modifier.height(6.dp))
-            Row {
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 Button (
                     onClick = {
-                        resultLauncher.launch(cameraIntent)
+                        cameraLauncher.launch(null)
                     },
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = "Camera")
                 }
             }
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(24.dp))
             TextField(
                 value = editTextValue,
                 onValueChange = { editTextValue = it },
                 label = { Text("Prompt") }
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Button (
                 onClick = {
                     if (bitmap!=null) {
@@ -167,7 +159,7 @@ fun GeminiMultimodalScreen(
                 Text(modifier = Modifier.padding(start = 8.dp), text = "Generate")
             }
             Spacer(modifier = Modifier
-                .height(30.dp))
+                .height(24.dp))
 
             if (isGenerating){
                 Text(
@@ -185,10 +177,13 @@ fun GeminiMultimodalScreen(
 @Composable
 fun SeeCodeButton(context: Context) {
     val githubLink = "https://github.com/android/ai-samples/tree/main/ai-catalog/samples/gemini-multimodal"
-    Button(onClick = {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
-        context.startActivity(intent)
-    }) {
+    Button(
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
+            context.startActivity(intent)
+        },
+        modifier = Modifier.padding(end = 8.dp)
+    ) {
         Icon(Icons.Filled.Code, contentDescription = "See code")
         Text(
             modifier = Modifier.padding(start = 8.dp),
